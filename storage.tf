@@ -1,7 +1,3 @@
-locals {
-  hdinsight_suffix = "hdinsights"
-}
-
 resource "azurerm_storage_account" "data_lake" {
   name                     = replace(var.project_name, "-", "")
   resource_group_name      = azurerm_resource_group.main.name
@@ -14,12 +10,8 @@ resource "azurerm_storage_account" "data_lake" {
   tags = local.default_tags
 }
 
-resource "azurerm_storage_data_lake_gen2_filesystem" "hdinsight" {
-  name               = local.hdinsight_suffix
-  storage_account_id = azurerm_storage_account.data_lake.id
-
-  depends_on = [azurerm_role_assignment.current_user_contributor]
-  properties = {
-
-  }
+resource "azurerm_storage_share" "data_lake_share" {
+  name                 = "${var.project_name}-share"
+  storage_account_name = azurerm_storage_account.data_lake.name
+  quota                = 100
 }
