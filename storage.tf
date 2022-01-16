@@ -10,6 +10,13 @@ resource "azurerm_storage_account" "data_lake" {
   tags = local.default_tags
 }
 
+resource "azurerm_storage_container" "data" {
+  name                  = "adzd-adl-data"
+  storage_account_name  = azurerm_storage_account.data_lake.name
+  container_access_type = "private"
+}
+
+// to be able to mount to a container
 resource "azurerm_storage_share" "data_lake_share" {
   name                 = "${var.project_name}-share"
   storage_account_name = azurerm_storage_account.data_lake.name
